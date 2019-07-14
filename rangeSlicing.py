@@ -92,11 +92,16 @@ def yearlySlicing(startDate, endDate):
 def simericalSlicing(startDate,endDate,slices):
     startDate = datetime.strptime(startDate,"%Y-%m-%d")
     endDate = datetime.strptime(endDate,"%Y-%m-%d")
-    delta=(endDate-startDate)/(slices-1)
+    delta=(endDate-startDate)/(slices)
     d = startDate
-    while d <= endDate:
-        print(d)
+    list = []
+    while d < endDate:
+        if (d+delta)>endDate:
+            list.append((datetime.strftime(d,"%Y-%m-%d"),datetime.strftime(endDate,"%Y-%m-%d")))
+        else:
+            list.append((datetime.strftime(d,"%Y-%m-%d"),datetime.strftime(d+delta,"%Y-%m-%d")))
         d += delta
+    return list
 
 def approximateSimericalSlicing(startDate,endDate,slices):
     startDateSlice = datetime.strptime(startDate,"%Y-%m-%d")
@@ -109,18 +114,36 @@ def approximateSimericalSlicing(startDate,endDate,slices):
     list = customSlicing(startDate, endDate, sliceSize)
     return list
 
-def randomSlice(startDate,endDate):
+def randomSlice(startDate,endDate, level='hour'):
     startDateSlice = datetime.strptime(startDate,"%Y-%m-%d")
     endDateSlice = datetime.strptime(endDate,"%Y-%m-%d")
     delta=(endDateSlice-startDateSlice)
-    timeDiff = delta.days*86400 + delta.seconds
     d=startDateSlice
-    while d<=endDateSlice:
-        print(d)
-        d +=timedelta(seconds=random.randint(1,timeDiff))
-startDate='2019-01-01'
-endDate='2019-01-10'
-randomSlice(startDate,endDate)
+    list=[]
+    if level=='hour':
+        timeDiff = delta.days*86400 + delta.seconds
+        while True:
+            randDelta = timedelta(seconds=random.randint(1,timeDiff))
+            if d+randDelta>endDateSlice:
+                list.append((datetime.strftime(d,"%Y-%m-%d %H:%M"),datetime.strftime(endDateSlice,"%Y-%m-%d %H:%M")))
+                break
+            else:
+                list.append((datetime.strftime(d,"%Y-%m-%d %H:%M"),datetime.strftime(d+randDelta,"%Y-%m-%d %H:%M")))
+            d += randDelta + timedelta(seconds=60)
+    elif level=='day':
+        timeDiff = delta.days
+        while True:
+            randDelta = timedelta(days=random.randint(1,timeDiff))
+            if d+randDelta>endDateSlice:
+                list.append((datetime.strftime(d,"%Y-%m-%d"),datetime.strftime(endDateSlice,"%Y-%m-%d")))
+                break
+            else:
+                list.append((datetime.strftime(d,"%Y-%m-%d"),datetime.strftime(d+randDelta,"%Y-%m-%d")))
+            d += randDelta + timedelta(seconds=60)
+    else:
+        pass
+    return list
+
 # Function to split a function date ranges into smaller microbatches
 def batch_process(function, startDate,endDate, frequency, **kwargs ):
     if frequency=='DAILY':
