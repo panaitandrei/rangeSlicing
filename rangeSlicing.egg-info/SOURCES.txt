@@ -5,3 +5,4 @@ rangeSlicing.egg-info/PKG-INFO
 rangeSlicing.egg-info/SOURCES.txt
 rangeSlicing.egg-info/dependency_links.txt
 rangeSlicing.egg-info/top_level.txt
+tests/__init__.py
