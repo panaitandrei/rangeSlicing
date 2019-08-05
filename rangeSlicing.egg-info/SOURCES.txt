@@ -1,5 +1,6 @@
 README.md
 rangeSlicing
+rangeSlicing.py
 setup.py
 rangeSlicing.egg-info/PKG-INFO
 rangeSlicing.egg-info/SOURCES.txt
